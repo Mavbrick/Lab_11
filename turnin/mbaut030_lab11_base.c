@@ -23,7 +23,7 @@
 unsigned char reset = 0x00;
 //unsigned char start = 0x00;
 unsigned char p1column = 0x80; //column 8 for paddle
-unsigned char p1row = 0xF1; //paddle is 3 led's wide
+unsigned char p1row = 0xF3; //paddle is 3 led's wide
 
 enum Player1States { p1Static, p1Up, p1Down};
 int Player1Fct(int state) {
@@ -34,7 +34,7 @@ int Player1Fct(int state) {
 		case p1Static:
 			if(reset == 0x04) {
 				state = p1Static;
-				p1row = 0xF1;
+				p1row = 0xF3;
 			}
 			else if(x == '\0') {
 				state = p1Static;
@@ -50,7 +50,7 @@ int Player1Fct(int state) {
 		case p1Up:
 			if(reset == 0x04) {
                                 state = p1Static;
-                                p1row = 0xF1;
+                                p1row = 0xF3;
                         }
 			else if(x == '\0') {
                                 state = p1Static;
@@ -66,7 +66,7 @@ int Player1Fct(int state) {
 		case p1Down:
 			if(reset == 0x04) {
                                 state = p1Static;
-                                p1row = 0xF1;
+                                p1row = 0xF3;
                         }
 			else if(x == '\0') {
                                 state = p1Static;
@@ -88,13 +88,13 @@ int Player1Fct(int state) {
 		break;
 
 		case p1Up:
-			if(p1row != 0xF8) {
+			if(p1row != 0xFC) {
 				p1row = (p1row >> 1) | 0x80;
 			}
 		break;
 
 		case p1Down:
-			if(p1row != 0xE3) {
+			if(p1row != 0xE7) {
 				p1row = (p1row << 1) | 0x01;
 			}
 		break;
@@ -121,7 +121,7 @@ int AIFct(int state) {
 }*/
 
 unsigned char p2column = 0x01;
-unsigned char p2row = 0xF1;
+unsigned char p2row = 0xF3;
 
 enum Player2States { p2Static, p2Up, p2Down };
 
@@ -132,7 +132,7 @@ int Player2Fct(int state) {
         	case p2Static:
 			if(reset == 0x04) {
                                 state = p2Static;
-                                p2row = 0xF1;
+                                p2row = 0xF3;
                         }
 			else if(bA == 0x01) {
 				state = p2Up;
@@ -151,7 +151,7 @@ int Player2Fct(int state) {
 		case p2Up:
 			if(reset == 0x04) {
                                 state = p2Static;
-                                p1row = 0xF1;
+                                p1row = 0xF3;
                         }
 			else if(bA == 0x01) {
                                 state = p2Up;
@@ -170,7 +170,7 @@ int Player2Fct(int state) {
 		case p2Down:
 			if(reset == 0x04) {
                                 state = p2Static;
-                                p1row = 0xF1;
+                                p1row = 0xF3;
                         }
 			else if(bA == 0x01) {
                                 state = p2Up;
@@ -195,13 +195,13 @@ int Player2Fct(int state) {
 		break;
 
 		case p2Up:
-			if(p2row != 0xF8) {
+			if(p2row != 0xFC) {
 				p2row = (p2row >> 1) | 0x80;
 			}
 		break;
 
 		case p2Down:
-			if(p2row != 0xE3) {
+			if(p2row != 0xE7) {
 				p2row = (p2row << 1) | 0x01;
 			}
 		break;
@@ -214,74 +214,36 @@ int Player2Fct(int state) {
 
 unsigned char ballcolumn = 0x08;
 unsigned char ballrow = 0xFB;
-unsigned char ballangle = 0x00;
-unsigned char i = 0x00;
-enum BallStates { ballWait, ballStart, ballLeft, ballRight, ballOne, ballTwo, RightUp, RightDown, LeftUp, LeftDown};
+//unsigned char toprow = 0xEF;
+//unsigned char bottomrow = 0xFE;
+//unsigned char r = 0x00;
+enum BallStates { ballWait, ballLeft, ballRight, ballOne, ballTwo };
 //	reset = ~PINB & 0x04;
 
 int BallFct(int state) {
 	switch(state) {
     		case ballWait:
-			state = ballStart;
+			state = ballLeft;
 		break;	
 
-		case ballStart:
-			/*if(reset == 0x04) {
-				state = ballReset;
-			}
-			else {*/
-				state = ballLeft;
-			//}
+		case ballOne:
+			state = ballLeft;
 		break;
-		
-		/*case ballReset:
-			if(reset == 0x04) {
-				state = ballStart;
-			}
-			else {
-				state = ballWait;
-			}
-		break;*/
+
+		case ballTwo:
+			state = ballRight;
+		break;
 
 		case ballLeft:
-			/*if(reset == 0x04) {
-				state = ballReset;
-			}*/
 			if(ballcolumn == 0x40) {
-				if(ballrow == 0xFD && p1row == 0xF8) {
-					state = ballRight;
+				if(ballrow == 0xFD && p1row == 0xFC) {	
+					state = ballRight;		
 				}
-				else if(ballrow == 0xFB && p1row == 0xF1) {
-					state = ballRight;
+				else if(ballrow == 0xFB && ((p1row == 0xF3) || (p1row == 0xF9))) {
+					state = ballRight;		    
 				}
-				else if(ballrow == 0xF7 && p1row == 0xE3) {
-					state = ballRight;
-				}
-
-				if(ballrow == 0xFE && p1row == 0xF8) {
-					state = RightUp;
-					ballangle = 0x01;
-				}
-				else if(ballrow == 0xFD && p1row == 0xF1) {
-					state = RightUp;
-					ballangle = 0x02;
-				}
-				else if(ballrow == 0xFB && p1row == 0xE3) {
-					state = RightUp;
-					ballangle = 0x03;
-				}
-
-				if(ballrow == 0xFB && p1row == 0xF8) {
-					state = RightDown;
-					ballangle = 0x01;
-				}
-				else if(ballrow == 0xF7 && p1row == 0xF1) {
-					state = RightDown;
-					ballangle = 0x02;
-				}
-				else if(ballrow == 0xEF && p1row == 0xE3) {
-					state = RightDown;
-					ballangle = 0x03;
+				else if(ballrow == 0xF7 && p1row == 0xE7) { 
+					state = ballRight;		   
 				}
 			}
 			else {
@@ -295,117 +257,48 @@ int BallFct(int state) {
 		break;
 
 		case ballRight:
-			/*if(reset == 0x04) {
-				state = ballReset;
-			}*/
 			if(ballcolumn == 0x02) {
-                                 if(ballrow == 0xFD && p2row == 0xF8) {
-                                         state = ballLeft;
-                                 }
-                                 else if(ballrow == 0xFB && p2row == 0xF1) {
-                                         state = ballLeft;
-                                 }
-                                 else if(ballrow == 0xF7 && p2row == 0xE3) {
-                                         state = ballLeft;
-                                 }
- 
-                                 if(ballrow == 0xFE && p2row == 0xF8) {
-                                         state = LeftUp;
-					 ballangle = 0x01;
-                                 }
-                                 else if(ballrow == 0xFD && p2row == 0xF1) {
-                                         state = LeftUp;
-					 ballangle = 0x02;
-                                 }
-                                 else if(ballrow == 0xFB && p2row == 0xE3) {
-                                         state = LeftUp;
-					 ballangle = 0x03;
-                                 }
- 
-                                 if(ballrow == 0xFB && p2row == 0xF8) {
-                                         state = LeftDown;
-					 ballangle = 0x01;
-                                 }
-                                 else if(ballrow == 0xF7 && p2row == 0xF1) {
-                                         state = LeftDown;
-					 ballangle = 0x02;
-                                 }
-                                 else if(ballrow == 0xEF && p2row == 0xE3) {
-                                         state = LeftDown;
-					 ballangle = 0x03;
-                                 }
+				if(ballrow == 0xFD && p2row == 0xFC) {
+                                        state = ballLeft;
+                                }
+                                else if(ballrow == 0xFB && ((p2row == 0xF3) || (p2row == 0xF9))) {
+                                        state = ballLeft;
+                                }
+                                else if(ballrow == 0xF7 && p2row == 0xE7) {
+                                        state = ballLeft;
+				}
 			}
 			else {
-				if(ballcolumn == 0x01) {
-					state = ballTwo;
-				}
-				else {
-					state = ballRight;
-				}
-			}
-		break;
-
-		case ballOne:
-				state = ballLeft;
-		break;
-
-		case ballTwo:
-				state = ballRight;
-		break;
-
-		case RightUp:
-				if(ballrow == 0xEF) { //possibly change for ballcolumn
-					state = RightDown;
-				}
-				else {
-					state = ballRight;
-				}
-		break;
-
-		case RightDown:
-				if(ballrow == 0xFE) {
-					state = RightUp;
-				}
-				else {
-					state = ballRight;
-				}
-		break;
-
-		case LeftUp:
-				if(ballrow == 0xEF) {
-					state = LeftDown;
-				}
-				else {
-					state = ballLeft;
-				}
-		break;
-
-		case LeftDown:
-				if(ballrow == 0xFE) {
-					state = LeftUp;
-				}
-				else {
-					state = ballLeft;
-				}	
+                                if(ballcolumn == 0x01) {
+                                        state = ballTwo;
+                                }
+                                else {
+                                        state = ballRight;
+                                }
+                        }
 		break;
 
 		default:
-			state = ballWait;
+			state = ballLeft;
 		break;
         }
 
         switch(state) {
         	case ballWait:
-		break;
-
-		case ballStart:
-		break;
-
-		/*case ballReset:
+			ballcolumn = 0x08;
 			ballrow = 0xFB;
-                        ballcolumn = 0x08;
-		break;*/
-			
+		break;
+
+		case ballOne:
+			ballcolumn = 0x08;
+                        ballrow = 0xFB;
+		break;
+
+		case ballTwo:
+        		ballcolumn = 0x10;
+                        ballrow = 0xFB;
+		break;
+
 		case ballLeft:
 			ballcolumn = ballcolumn << 1;
 		break;
@@ -413,93 +306,36 @@ int BallFct(int state) {
 		case ballRight:
 			ballcolumn = ballcolumn >> 1;
 		break;
-
-		case ballOne:
-			ballcolumn = 0x08;
-                        ballrow = 0xFB;
-
-		break;
-
-		case ballTwo:
-			ballcolumn = 0x10;
-                        ballrow = 0xFB;
-		break;
-
-		case RightUp:
-				/*if(ballangle == 0x01) {
-					ballcolumn = 0x40;
-					ballrow = 0xFD;
-				}
-				else if(ballangle == 0x02) {
-					ballcolumn = 
-				}
-				else if(ballangle == 0x03) {
-
-				}*/
+		
+		/*case RightUp:
 			while(RightUp) {
-                                ballcolumn = ballcolumn >> 1;
-                                ballrow = ballrow >> 1;
-                        }
-
-		break;
-
-		case RightDown:
-			while(RightDown) {
 				ballcolumn = ballcolumn >> 1;
 				ballrow = ballrow << 1;
 			}
-		break;
-
-		case LeftUp:
-			while(LeftUp) {
-				ballcolumn = ballcolumn << 1;
-				ballrow = ballrow >> 1;
-			}
-		break;
-
-		case LeftDown:
-			while(LeftDown) {
-				ballcolumn = ballcolumn << 1;
-				ballrow = ballrow << 1;
-			}
-		break;
-	}	
+		break;*/
+	}
         return state;
 }
 
 unsigned char columns[5];
 unsigned char rows[5];
 
-enum combineLED { displayStart, displayLED };
+enum combineLED { displayLED }; //
 
 int displayFct(int state) {
 	static unsigned char i;
-	static unsigned char count = 0;
+	static unsigned char count = 0; //-1
 	switch(state) {
-		case displayStart:
-			state = displayLED;
-		break;
-
         	case displayLED:
-			if(count == 5) { 
+			if(count == 5) { //4
 				count = 0;
 			}
 			else {
-				++count;
+				count++;
 			}
-			for (i = 0; i < 5; ++i) {
+			for (i = 0; i < 5; i++) {
 				columns[i] = 0;
-					if((ballrow & (0x01 << i)) == 0) {
-						columns[i] = ballcolumn;
-					}
-					if((p1row & (0x01 << i)) == 0) {
-						columns[i] = columns[i] | p1column;
-					}
-					if((p2row & (0x01 << i)) == 0) {
-						columns[i] = columns[i] | p2column;
-					}
-
-					/*if((ballrow & (0x01 << i)) == 0) { //== 0x00
+					if((ballrow & (0x01 << i)) == 0) { //== 0x00
 						columns[i] = ballcolumn; //ball movement
 					}
 					if((p1row & (0x01 << i)) == 0) { //player 1 paddle
@@ -507,7 +343,7 @@ int displayFct(int state) {
 					}
 					if((p2row & (0x01 << i)) == 0) { //player 2 paddle
                                                 columns[i] |= p2column;
-                                        }*/
+                                        }
 					if(((ballrow & p1row & p2row) & (0x01 << i)) == 0) { //displays paddles and ball
 						rows[i] = ~(0x01 << i);
 					}
