@@ -1,11 +1,12 @@
-/*	Author: Maverick Bautista
- *      Partner(s) Name: 
- *	Lab Section: 023
- *	Assignment: Lab 11  Exercise 1
- *	Exercise Description: [optional - include for your own benefit]
+/* Author: Maverick Bautista
+ * Lab Section: 023
+ * Assignment: Lab 11  Exercise 1
+ * Exercise Description: [optional - include for your own benefit]
  *
- *	I acknowledge all content contained herein, excluding template or example
- *	code, is my own original work.
+ * I acknowledge all content contained herein, excluding template or example
+ * code is my own original work.
+ *
+ *  Demo Link: https://youtu.be/HsVHZfRrY6w
  */
 #include <avr/io.h>
 #ifdef _SIMULATE_

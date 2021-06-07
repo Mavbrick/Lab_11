@@ -1,11 +1,12 @@
-/*	Author: Maverick Bautista
- *      Partner(s) Name: 
- *	Lab Section: 023
- *	Assignment: Lab 11  Exercise 1
- *	Exercise Description: [optional - include for your own benefit]
+/* Author: Maverick Bautista
+ * Lab Section: 023
+ * Assignment: Lab 11  Exercise 1
+ * Exercise Description: [optional - include for your own benefit]
  *
- *	I acknowledge all content contained herein, excluding template or example
- *	code, is my own original work.
+ * I acknowledge all content contained herein, excluding template or example
+ * code is my own original work.
+ *
+ *  Demo Link: https://youtu.be/HsVHZfRrY6w
  */
 #include <avr/io.h>
 #ifdef _SIMULATE_
@@ -67,7 +68,7 @@ int Player1Fct(int state) {
 			else if(x == '\0') {
                                 state = p1Static;
                         }
-                        else if(x == '1') {i
+                        else if(x == '1') {
                                 state = p1Up;
                         }
                         else if(x == '2') {
