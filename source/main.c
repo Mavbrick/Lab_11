@@ -67,7 +67,7 @@ int Player1Fct(int state) {
 			else if(x == '\0') {
                                 state = p1Static;
                         }
-                        else if(x == '1') {i
+                        else if(x == '1') {
                                 state = p1Up;
                         }
                         else if(x == '2') {
